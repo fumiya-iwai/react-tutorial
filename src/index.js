@@ -10,41 +10,18 @@ const Square = (props) => {
   );
 }
 
-const Board = () => {
-  const [squares, setSquares] = useState(Array(9).fill(null));
-  const [xIsNext, setxIsNext] = useState(true);
-
-  const handleClick = (i) => {
-    let newSquares = squares.slice();
-    if (winner || squares[i]) {
-      return;
-    }
-    newSquares[i] = xIsNext? "X":"O";
-    setSquares(newSquares);
-    setxIsNext(!xIsNext);
-  }
-
+const Board = (props) => {
   const renderSquare = (i) => {
     return (
       <Square
-        value={squares[i]}
-        onClick={()=>handleClick(i)}
+        value={props.squares[i]}
+        onClick={()=>props.onClick(i)}
       />
     );
   }
   
-  const winner = calculateWinner(squares);
-  let status;
-  if (winner) {
-    status = "Winner: " + winner;
-  } else {
-    status = "Next player: " + (xIsNext? "X":"O");
-  }
-
-
   return (
     <div>
-      <div className="status">{status}</div>
       <div className="board-row">
         {renderSquare(0)}
         {renderSquare(1)}
@@ -64,20 +41,44 @@ const Board = () => {
   );
 }
 
-class Game extends React.Component {
-  render() {
-    return (
-      <div className="game">
-        <div className="game-board">
-          <Board />
-        </div>
-        <div className="game-info">
-          <div>{/* status */}</div>
-          <ol>{/* TODO */}</ol>
-        </div>
-      </div>
-    );
+const Game = () => {
+  const [history, setHistory] = useState([{squares: Array(9).fill(null)}]);
+  const [xIsNext, setxIsNext] = useState(true);
+  const current = history[history.length-1];
+  const winner = calculateWinner(current.squares);
+  let status;
+  if (winner) {
+    status = "Winner: " + winner;
+  } else {
+    status = "Next player: " + (xIsNext? "X":"O");
   }
+  
+  const handleClick = (i) => {
+    const current = history[history.length-1];
+    const squares = current.squares.slice();
+    if (winner || squares[i]) {
+      return;
+    }
+    squares[i] = xIsNext? "X":"O";
+    setHistory(history.concat([{squares: squares}]));
+    setxIsNext(!xIsNext);
+  }
+
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board 
+          squares={current.squares}
+          onClick={(i)=>handleClick(i)}
+        />
+      </div>
+      <div className="game-info">
+        <div>{status}</div>
+        <ol>{/* TODO */}</ol>
+      </div>
+    </div>
+  );
+  
 }
 
 // ========================================
