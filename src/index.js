@@ -54,7 +54,6 @@ const Game = () => {
   }
   
   const handleClick = (i) => {
-    const current = history[history.length-1];
     const squares = current.squares.slice();
     if (winner || squares[i]) {
       return;
