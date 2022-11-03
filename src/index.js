@@ -42,7 +42,7 @@ const Board = (props) => {
 }
 
 const Game = () => {
-  const [history, setHistory] = useState([{squares: Array(9).fill(null)}]);
+  const [history, setHistory] = useState([{squares: Array(9).fill(null), locate: null}]);
   const [xIsNext, setXIsNext] = useState(true);
   const [stepNumber, setStepNumber] = useState(0);
   const current = history[stepNumber];
@@ -50,7 +50,7 @@ const Game = () => {
 
   const moves = history.map((step, move) => {
     const desc = move ?
-      "Go to move #" + move :
+      "Go to move #" + move + " " + step.locate:
       "Go to game start";
     return (
       <li key={move}>
@@ -73,7 +73,28 @@ const Game = () => {
       return;
     }
     squares[i] = xIsNext? "X":"O";
-    setHistory(newhistory.concat([{squares: squares}]));
+    let loc;
+    if (i === 0) {
+      loc = "(1, 1)";
+    }else if (i === 1) {
+      loc = "(2, 1)";
+    }else if (i === 2) {
+      loc = "(3, 1)";
+    }else if (i === 3) {
+      loc = "(1, 2)";
+    }else if (i === 4) {
+      loc = "(2, 2)";
+    }else if (i === 5) {
+      loc = "(3, 2)";
+    }else if (i === 6) {
+      loc = "(1, 3)";
+    }else if (i === 7) {
+      loc = "(2, 3)";
+    }else {
+      loc = "(3, 3)";
+    }
+
+    setHistory(newhistory.concat([{squares: squares, locate: loc}]));
     setStepNumber(newhistory.length);
     setXIsNext(!xIsNext);
   }
