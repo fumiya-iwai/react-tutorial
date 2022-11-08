@@ -20,23 +20,19 @@ const Board = (props) => {
     );
   }
   
+  let squares = [];
+  const div = [];
+  for (let i=0; i<9; i+=3) {
+    squares = [];
+    for (let j=0; j<3; j++) {
+      squares.push(renderSquare(i+j));
+    }
+    div.push(<div className = "board-row" key={i}>{squares}</div>)
+  }
+
   return (
     <div>
-      <div className="board-row">
-        {renderSquare(0)}
-        {renderSquare(1)}
-        {renderSquare(2)}
-      </div>
-      <div className="board-row">
-        {renderSquare(3)}
-        {renderSquare(4)}
-        {renderSquare(5)}
-      </div>
-      <div className="board-row">
-        {renderSquare(6)}
-        {renderSquare(7)}
-        {renderSquare(8)}
-      </div>
+      {div}
     </div>
   );
 }
@@ -54,7 +50,8 @@ const Game = () => {
       "Go to game start";
     return (
       <li key={move}>
-        <button onClick = {()=>jumpTo(move)}>{desc}</button>
+        {stepNumber === move ? <button style = {{fontWeight: 700}} onClick = {()=>jumpTo(move)}>{desc}</button>:
+        <button onClick = {()=>jumpTo(move)}>{desc}</button>}
       </li>
     );
   });
